@@ -38,6 +38,9 @@ buildscript {
         ktxViewModelVersion = "2.2.0-alpha01"
         ktxFragmentVersion = "1.0.0"
         ktxLiveData = "2.1.0"
+
+        // Moshi
+        moshiVersion = "1.9.2"
     }
 
     repositories {

@@ -29,11 +29,15 @@ import com.owncloud.android.data.sharing.sharees.datasources.implementation.OCRe
 import com.owncloud.android.data.sharing.sharees.network.OCShareeService
 import com.owncloud.android.data.sharing.shares.datasources.RemoteShareDataSource
 import com.owncloud.android.data.sharing.shares.datasources.implementation.OCRemoteShareDataSource
+import com.owncloud.android.data.user.datasources.RemoteUserDataSource
+import com.owncloud.android.data.user.datasources.implementation.OCRemoteUserDataSource
+import com.owncloud.android.data.user.network.OCUserService
 import com.owncloud.android.lib.common.OwnCloudAccount
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
 import com.owncloud.android.lib.resources.shares.ShareService
 import com.owncloud.android.lib.resources.shares.ShareeService
 import com.owncloud.android.lib.resources.status.CapabilityService
+import com.owncloud.android.lib.resources.users.UserService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -45,6 +49,7 @@ val remoteDataSourceModule = module {
     single<CapabilityService> { OCCapabilityService(get()) }
     single<ShareService> { OCShareService(get()) }
     single<ShareeService> { OCShareeService(get()) }
+    single<UserService> { OCUserService(get()) }
 
     factory<RemoteCapabilitiesDataSource> {
         OCRemoteCapabilitiesDataSource(
@@ -60,6 +65,11 @@ val remoteDataSourceModule = module {
     }
     factory<RemoteShareeDataSource> {
         OCRemoteShareeDataSource(
+            get()
+        )
+    }
+    factory<RemoteUserDataSource> {
+        OCRemoteUserDataSource(
             get()
         )
     }
