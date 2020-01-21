@@ -17,19 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.owncloud.android.domain.server.usecases
+package com.owncloud.android.domain.server
 
-import com.owncloud.android.domain.BaseUseCaseWithResult
-import com.owncloud.android.domain.server.ServerRepository
+import java.util.ArrayList
 
-class CheckPathExistenceUseCase(
-    private val serverRepository: ServerRepository
-) : BaseUseCaseWithResult<Boolean, CheckPathExistenceUseCase.Params>() {
-    override fun run(params: Params): Boolean =
-        serverRepository.checkPathExistence(params.remotePath, params.userLogged)
-
-    data class Params(
-        val remotePath: String,
-        val userLogged: Boolean
-    )
-}
+data class ServerInfo(
+    val ownCloudVersion : String,
+    val baseUrl : String,
+    val authMethods : List<AuthenticationMethod> ,
+    val isSecureConnection: Boolean
+)
