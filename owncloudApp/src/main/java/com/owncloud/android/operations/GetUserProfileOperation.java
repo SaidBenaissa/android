@@ -28,15 +28,16 @@ import com.owncloud.android.R;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
 import com.owncloud.android.datamodel.UserProfile;
 import com.owncloud.android.datamodel.UserProfilesRepository;
+import com.owncloud.android.domain.UseCaseResult;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.accounts.AccountUtils;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.resources.users.GetRemoteUserAvatarOperation;
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation;
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation.UserInfo;
+import com.owncloud.android.domain.user.model.UserInfo;
 import com.owncloud.android.lib.resources.users.GetRemoteUserQuotaOperation;
 import com.owncloud.android.lib.resources.users.GetRemoteUserQuotaOperation.RemoteQuota;
 import com.owncloud.android.operations.common.SyncOperation;
+import com.owncloud.android.operations.common.UseCaseHelper;
 import timber.log.Timber;
 
 /**
@@ -73,36 +74,35 @@ public class GetUserProfileOperation extends SyncOperation {
         UserProfile userProfile;
 
         try {
-            /// get display name
-            GetRemoteUserInfoOperation getDisplayName = new GetRemoteUserInfoOperation();
-            final RemoteOperationResult<UserInfo> userInfoOperationResult = getDisplayName.execute(client);
-
             UserProfilesRepository userProfilesRepository = UserProfilesRepository.getUserProfilesRepository();
 
-            if (userInfoOperationResult.isSuccess()) {
+            /// get display name
+            UseCaseHelper useCaseHelper = new UseCaseHelper();
+            UseCaseResult<UserInfo> useCaseResult = useCaseHelper.getUserInfo();
+            if (useCaseResult.getDataOrNull()!= null) {
                 // store display name with account data
                 AccountManager accountManager = AccountManager.get(MainApp.Companion.getAppContext());
-                UserInfo userInfo = userInfoOperationResult.getData();
+                UserInfo userInfo = useCaseResult.getDataOrNull();
                 Account storedAccount = getStorageManager().getAccount();
                 accountManager.setUserData(
                         storedAccount,
                         AccountUtils.Constants.KEY_DISPLAY_NAME,    // keep also there, for the moment
-                        userInfo.mDisplayName
+                        userInfo.getDisplayName()
                 );
                 accountManager.setUserData(
                         storedAccount,
                         AccountUtils.Constants.KEY_ID,
-                        userInfo.mId
+                        userInfo.getId()
                 );
 
                 // map user info into UserProfile instance
                 userProfile = new UserProfile(
                         storedAccount.name,
-                        userInfo.mId,
-                        userInfo.mDisplayName,
-                        userInfo.mEmail
+                        userInfo.getId(),
+                        userInfo.getDisplayName(),
+                        userInfo.getEmail()
                 );
-
+                Timber.d("User created %s", userInfo.toString());
                 /// get quota
                 GetRemoteUserQuotaOperation getRemoteUserQuotaOperation = new GetRemoteUserQuotaOperation(mRemotePath);
 
@@ -166,7 +166,8 @@ public class GetUserProfileOperation extends SyncOperation {
                     return quotaOperationResult;
                 }
             } else {
-                return userInfoOperationResult;
+                // It should not happen
+                return new RemoteOperationResult<>(RemoteOperationResult.ResultCode.UNKNOWN_ERROR);
             }
         } catch (Exception e) {
             Timber.e(e, "Exception while getting user profile: ");

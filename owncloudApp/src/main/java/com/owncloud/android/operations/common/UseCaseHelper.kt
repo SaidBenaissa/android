@@ -2,31 +2,36 @@
  * ownCloud Android client application
  *
  * @author Abel García de Prada
- * Copyright (C) 2020 ownCloud GmbH.
- *
+ * Copyright (C) 2019 ownCloud GmbH.
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.operations.common
 
-package com.owncloud.android.domain.user.usecases
-
-import com.owncloud.android.domain.BaseUseCaseWithResult
-import com.owncloud.android.domain.sharing.shares.usecases.BaseUseCase
-import com.owncloud.android.domain.user.UserRepository
+import com.owncloud.android.domain.UseCaseResult
 import com.owncloud.android.domain.user.model.UserInfo
+import com.owncloud.android.domain.user.usecases.GetUserInfoUseCase
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class GetUserInfoUseCase(
-    private val userRepository: UserRepository
-) : BaseUseCaseWithResult<UserInfo, Unit>() {
-    override fun run(params: Unit): UserInfo =
-        userRepository.getUserInfo()
+/*
+ * Do not get used to use this helper.
+ * Call directly to usecases
+ */
+class UseCaseHelper : KoinComponent {
+    private val getUserInfoUseCase: GetUserInfoUseCase by inject()
+
+    fun getUserInfo(): UseCaseResult<UserInfo> {
+        return getUserInfoUseCase.execute(Unit)
+    }
 }
