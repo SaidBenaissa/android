@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.owncloud.android.domain.server
+package com.owncloud.android.data.server.datasources
 
 import com.owncloud.android.domain.server.model.AuthenticationMethod
 
-interface ServerRepository {
+interface RemoteServerDataSource   {
     fun checkPathExistence(path: String, userLogged: Boolean): Boolean
 
     fun getAuthenticationMethods(): List<AuthenticationMethod>

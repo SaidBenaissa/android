@@ -17,12 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.owncloud.android.domain.server
+package com.owncloud.android.data.server.repository
 
+import com.owncloud.android.domain.server.ServerRepository
 import com.owncloud.android.domain.server.model.AuthenticationMethod
 
-interface ServerRepository {
-    fun checkPathExistence(path: String, userLogged: Boolean): Boolean
+class OCServerRepository : ServerRepository{
+    override fun checkPathExistence(path: String, userLogged: Boolean): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    fun getAuthenticationMethods(): List<AuthenticationMethod>
+    override fun getAuthenticationMethods(): List<AuthenticationMethod> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

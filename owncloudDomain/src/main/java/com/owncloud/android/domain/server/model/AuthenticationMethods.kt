@@ -1,7 +1,7 @@
 /**
  * ownCloud Android client application
  *
- * @author Abel García de Prada
+ * @author Christian Schabesberger
  * Copyright (C) 2020 ownCloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.owncloud.android.domain.server
+package com.owncloud.android.domain.server.model
 
-import com.owncloud.android.domain.server.model.AuthenticationMethod
-
-interface ServerRepository {
-    fun checkPathExistence(path: String, userLogged: Boolean): Boolean
-
-    fun getAuthenticationMethods(): List<AuthenticationMethod>
+enum class AuthenticationMethod {
+    NONE, BASIC_HTTP_AUTH, BEARER_TOKEN;
 }

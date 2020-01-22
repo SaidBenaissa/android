@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.owncloud.android.domain.server
+package com.owncloud.android.domain.server.usecases
 
-import java.util.ArrayList
+import com.owncloud.android.domain.BaseUseCaseWithResult
+import com.owncloud.android.domain.server.ServerRepository
+import com.owncloud.android.domain.server.model.AuthenticationMethod
 
-data class ServerInfo(
-    val ownCloudVersion : String,
-    val baseUrl : String,
-    val authMethods : List<AuthenticationMethod> ,
-    val isSecureConnection: Boolean
-)
+class GetAuthenticationMethodsUseCase(
+    private val serverRepository: ServerRepository
+) : BaseUseCaseWithResult<List<AuthenticationMethod>, Unit>() {
+    override fun run(params: Unit): List<AuthenticationMethod> =
+        serverRepository.getAuthenticationMethods()
+}
